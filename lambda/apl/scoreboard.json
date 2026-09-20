@@ -2,12 +2,6 @@
   "type": "APL",
   "version": "2023.2",
   "theme": "dark",
-  "import": [
-    {
-      "name": "alexa-layouts",
-      "version": "1.7.0"
-    }
-  ],
   "resources": [
     {
       "colors": {
