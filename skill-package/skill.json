@@ -15,11 +15,15 @@
       },
       "isAvailableWorldwide": true,
       "testingInstructions": "Say 'Alexa, open barca live score' to launch. Say 'what's the score' during or after launch to get the live match state.",
-      "category": "SPORTS",
+      "category": "SPORTS_NEWS",
       "distributionCountries": []
     },
     "apis": {
       "custom": {
+        "endpoint": {
+          "sslCertificateType": "Trusted",
+          "uri": "https://barca-live-score.onrender.com/"
+        },
         "interfaces": [
           {
             "type": "ALEXA_PRESENTATION_APL"

@@ -6,14 +6,7 @@ const app = express();
 const skill = skillBuilder.create();
 const adapter = new ExpressAdapter(skill, true, true);
 
-app.post('/', (req, res, next) => {
-    console.log(`Incoming POST / at ${new Date().toISOString()}`);
-    next();
-}, express.json(), adapter.getRequestHandlers());
-
-process.on('unhandledRejection', (err) => {
-    console.error('Unhandled rejection:', err && err.stack ? err.stack : err);
-});
+app.post('/', express.json(), adapter.getRequestHandlers());
 
 app.get('/', (req, res) => {
     res.status(200).send('Barca Live Score skill endpoint is running.');
