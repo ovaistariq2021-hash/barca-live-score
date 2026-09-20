@@ -26,6 +26,18 @@ function formatKickoff(utcDate) {
 
 const BARCA_TEAM_ID = 81;
 
+const COMPETITION_NAMES = {
+    PD: 'La Liga',
+    CL: 'Champions League',
+    CDR: 'Copa del Rey',
+    SUC: 'Supercopa de España'
+};
+
+function competitionDisplayName(competition) {
+    if (!competition) return 'Match';
+    return COMPETITION_NAMES[competition.code] || competition.name;
+}
+
 const STAGE_LABELS = {
     REGULAR_SEASON: null, // shown as "Matchday N" instead
     GROUP_STAGE: 'Group Stage',
@@ -99,7 +111,7 @@ function buildScoreboard(status) {
 
     const datasource = {
         scoreboard: {
-            competition: match.competition ? match.competition.name : 'Match',
+            competition: competitionDisplayName(match.competition),
             statusLabel,
             statusColor,
             homeName,
