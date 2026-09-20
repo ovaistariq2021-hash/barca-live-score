@@ -9,7 +9,7 @@ const adapter = new ExpressAdapter(skill, true, true);
 app.post('/', (req, res, next) => {
     console.log(`Incoming POST / at ${new Date().toISOString()}`);
     next();
-}, express.json(), adapter.getRequestHandlers());
+}, adapter.getRequestHandlers());
 
 process.on('unhandledRejection', (err) => {
     console.error('Unhandled rejection:', err && err.stack ? err.stack : err);
