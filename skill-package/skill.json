@@ -31,7 +31,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "sslCertificateType": "Trusted",
+          "sslCertificateType": "Wildcard",
           "uri": "https://barca-live-score.onrender.com/"
         },
         "interfaces": [
