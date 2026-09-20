@@ -4,7 +4,8 @@ const { skillBuilder } = require('./index');
 
 const app = express();
 const skill = skillBuilder.create();
-const adapter = new ExpressAdapter(skill, true, true);
+const verifyRequests = process.env.DISABLE_VERIFICATION !== 'true';
+const adapter = new ExpressAdapter(skill, verifyRequests, verifyRequests);
 
 app.post('/', (req, res, next) => {
     const start = Date.now();
