@@ -25,7 +25,10 @@ function addScoreboardDirective(handlerInput, datasource) {
 }
 
 async function speakScoreboard(handlerInput) {
+    const start = Date.now();
+    console.log('Fetching Barca status...');
     const status = await getBarcaStatus();
+    console.log(`getBarcaStatus took ${Date.now() - start}ms, type=${status.type}`);
     const { speech, datasource } = buildScoreboard(status);
     addScoreboardDirective(handlerInput, datasource);
     return { speech, keepOpen: status.type === 'live' };

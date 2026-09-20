@@ -7,7 +7,11 @@ const skill = skillBuilder.create();
 const adapter = new ExpressAdapter(skill, true, true);
 
 app.post('/', (req, res, next) => {
+    const start = Date.now();
     console.log(`Incoming POST / at ${new Date().toISOString()}`);
+    res.on('finish', () => {
+        console.log(`Responded ${res.statusCode} after ${Date.now() - start}ms`);
+    });
     next();
 }, adapter.getRequestHandlers());
 
