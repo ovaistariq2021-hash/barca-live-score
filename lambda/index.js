@@ -30,9 +30,12 @@ async function speakScoreboard(handlerInput) {
     const status = await getBarcaStatus();
     console.log(`getBarcaStatus took ${Date.now() - start}ms, type=${status.type}`);
     const { speech, datasource } = buildScoreboard(status);
+    handlerInput.attributesManager.setSessionAttributes({ lastDatasource: datasource });
     addScoreboardDirective(handlerInput, datasource);
-    return { speech, keepOpen: status.type === 'live' };
+    return { speech };
 }
+
+const VOICE_ERROR = "I couldn't reach the football data service right now. Please try again shortly.";
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -40,18 +43,15 @@ const LaunchRequestHandler = {
     },
     async handle(handlerInput) {
         try {
-            const { speech, keepOpen } = await speakScoreboard(handlerInput);
-            const responseBuilder = handlerInput.responseBuilder.speak(speech);
-            if (keepOpen) {
-                responseBuilder.reprompt("Say 'what's the score' anytime to check again.");
-            } else {
-                responseBuilder.withShouldEndSession(true);
-            }
-            return responseBuilder.getResponse();
+            const { speech } = await speakScoreboard(handlerInput);
+            return handlerInput.responseBuilder
+                .speak(speech)
+                .withShouldEndSession(false)
+                .getResponse();
         } catch (err) {
             console.log(`~~~~ Launch error: ${err.stack}`);
             return handlerInput.responseBuilder
-                .speak("I couldn't reach the football data service right now. Please try again shortly.")
+                .speak(VOICE_ERROR)
                 .withShouldEndSession(true)
                 .getResponse();
         }
@@ -65,18 +65,15 @@ const GetLiveScoreIntentHandler = {
     },
     async handle(handlerInput) {
         try {
-            const { speech, keepOpen } = await speakScoreboard(handlerInput);
-            const responseBuilder = handlerInput.responseBuilder.speak(speech);
-            if (keepOpen) {
-                responseBuilder.reprompt("Say 'what's the score' anytime to check again.");
-            } else {
-                responseBuilder.withShouldEndSession(true);
-            }
-            return responseBuilder.getResponse();
+            const { speech } = await speakScoreboard(handlerInput);
+            return handlerInput.responseBuilder
+                .speak(speech)
+                .withShouldEndSession(false)
+                .getResponse();
         } catch (err) {
             console.log(`~~~~ GetLiveScore error: ${err.stack}`);
             return handlerInput.responseBuilder
-                .speak("I couldn't reach the football data service right now. Please try again shortly.")
+                .speak(VOICE_ERROR)
                 .withShouldEndSession(true)
                 .getResponse();
         }
@@ -93,15 +90,44 @@ const NextMatchIntentHandler = {
             const { speech } = await speakScoreboard(handlerInput);
             return handlerInput.responseBuilder
                 .speak(speech)
-                .withShouldEndSession(true)
+                .withShouldEndSession(false)
                 .getResponse();
         } catch (err) {
             console.log(`~~~~ NextMatch error: ${err.stack}`);
             return handlerInput.responseBuilder
-                .speak("I couldn't reach the football data service right now. Please try again shortly.")
+                .speak(VOICE_ERROR)
                 .withShouldEndSession(true)
                 .getResponse();
         }
+    }
+};
+
+const ScoreboardRefreshEventHandler = {
+    canHandle(handlerInput) {
+        const requestType = Alexa.getRequestType(handlerInput.requestEnvelope);
+        if (requestType !== 'Alexa.Presentation.APL.UserEvent') return false;
+        const args = handlerInput.requestEnvelope.request.arguments || [];
+        return args[0] === 'refresh';
+    },
+    async handle(handlerInput) {
+        const attributesManager = handlerInput.attributesManager;
+        try {
+            console.log('Auto-refresh tick...');
+            const status = await getBarcaStatus();
+            const { datasource } = buildScoreboard(status);
+            attributesManager.setSessionAttributes({ lastDatasource: datasource });
+            addScoreboardDirective(handlerInput, datasource);
+        } catch (err) {
+            console.log(`~~~~ Refresh error: ${err.stack}`);
+            // Keep showing the last known-good screen and retry sooner, instead of blanking the display.
+            const cached = attributesManager.getSessionAttributes().lastDatasource;
+            const fallback = cached || buildScoreboard({ type: 'none', match: null }).datasource;
+            fallback.nextPollMs = 30 * 1000;
+            addScoreboardDirective(handlerInput, fallback);
+        }
+        return handlerInput.responseBuilder
+            .withShouldEndSession(false)
+            .getResponse();
     }
 };
 
@@ -126,6 +152,9 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
+        if (supportsAPL(handlerInput)) {
+            handlerInput.responseBuilder.addDirective({ type: 'Alexa.Presentation.APL.ClearDocument' });
+        }
         return handlerInput.responseBuilder
             .speak('Visca Barca!')
             .withShouldEndSession(true)
@@ -188,6 +217,7 @@ const skillBuilder = Alexa.SkillBuilders.custom()
         LaunchRequestHandler,
         GetLiveScoreIntentHandler,
         NextMatchIntentHandler,
+        ScoreboardRefreshEventHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,

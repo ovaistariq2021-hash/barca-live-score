@@ -26,8 +26,45 @@ function formatKickoff(utcDate) {
 
 const BARCA_TEAM_ID = 81;
 
+const STAGE_LABELS = {
+    REGULAR_SEASON: null, // shown as "Matchday N" instead
+    GROUP_STAGE: 'Group Stage',
+    LAST_16: 'Round of 16',
+    ROUND_OF_16: 'Round of 16',
+    QUARTER_FINALS: 'Quarter-Final',
+    SEMI_FINALS: 'Semi-Final',
+    FINAL: 'Final'
+};
+
+function buildMetaTags(match, type) {
+    const tags = [];
+
+    const stageLabel = STAGE_LABELS[match.stage];
+    if (stageLabel) {
+        tags.push(stageLabel);
+    } else if (match.matchday) {
+        tags.push(`Matchday ${match.matchday}`);
+    }
+
+    if ((type === 'live' || type === 'finished') && match.score && match.score.halfTime
+        && match.score.halfTime.home !== null && match.score.halfTime.away !== null) {
+        tags.push(`HT ${match.score.halfTime.home}-${match.score.halfTime.away}`);
+    }
+
+    if (match.venue) {
+        tags.push(match.venue);
+    }
+
+    return tags;
+}
+
+function computeNextPollMs(type) {
+    return type === 'live' ? 30 * 1000 : 60 * 60 * 1000;
+}
+
 function buildScoreboard(status) {
     const { type, match } = status;
+    const nextPollMs = computeNextPollMs(type);
 
     if (type === 'none' || !match) {
         return {
@@ -44,7 +81,9 @@ function buildScoreboard(status) {
                     homeScore: '-',
                     awayScore: '-',
                     clock: '',
-                    footer: 'Check back closer to the next matchday.'
+                    metaTags: [],
+                    footer: 'Check back closer to the next matchday.',
+                    nextPollMs
                 }
             }
         };
@@ -70,11 +109,13 @@ function buildScoreboard(status) {
             homeScore: type === 'upcoming' ? '' : homeScore,
             awayScore: type === 'upcoming' ? '' : awayScore,
             clock: type === 'live' ? statusLabel : '',
+            metaTags: buildMetaTags(match, type),
             footer: type === 'upcoming'
                 ? `Kickoff: ${formatKickoff(match.utcDate)}`
                 : type === 'finished'
                     ? `Played on ${formatKickoff(match.utcDate)}`
-                    : 'Tracking live on your Echo Show'
+                    : 'Tracking live on your Echo Show',
+            nextPollMs
         }
     };
 

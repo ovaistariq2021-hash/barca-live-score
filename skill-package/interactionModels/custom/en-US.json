@@ -5,7 +5,11 @@
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
-                    "samples": []
+                    "samples": [
+                        "close",
+                        "close it",
+                        "dismiss"
+                    ]
                 },
                 {
                     "name": "AMAZON.HelpIntent",
@@ -13,7 +17,12 @@
                 },
                 {
                     "name": "AMAZON.StopIntent",
-                    "samples": []
+                    "samples": [
+                        "quit",
+                        "exit",
+                        "close the screen",
+                        "turn it off"
+                    ]
                 },
                 {
                     "name": "AMAZON.NavigateHomeIntent",
@@ -36,7 +45,10 @@
                         "show me the score",
                         "show the live score",
                         "what's happening in the match",
-                        "how's the match going"
+                        "how's the match going",
+                        "barcelona score",
+                        "barcelona's score",
+                        "what's the barcelona score"
                     ]
                 },
                 {
@@ -47,7 +59,15 @@
                         "when is barca's next match",
                         "what's barca's next game",
                         "when do they play next",
-                        "when is the next match"
+                        "when is the next match",
+                        "barcelona next match",
+                        "barcelona's next match",
+                        "when is barcelona playing",
+                        "when is barcelona playing next",
+                        "when's barcelona playing next",
+                        "next barcelona match",
+                        "what time does barcelona play next",
+                        "when do they play again"
                     ]
                 }
             ],

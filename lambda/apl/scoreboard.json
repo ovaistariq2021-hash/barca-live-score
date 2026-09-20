@@ -5,11 +5,14 @@
   "resources": [
     {
       "colors": {
+        "barcaNavy": "#0B1E42",
         "barcaBlue": "#0A3B7C",
-        "barcaGarnet": "#A50044",
-        "barcaGold": "#EDBB00",
+        "barcaGarnet": "#8E1039",
+        "barcaGold": "#F2B90C",
         "textPrimary": "#FFFFFF",
-        "textMuted": "#C9D6EA"
+        "textMuted": "#9FB0D0",
+        "chipBg": "#1A2C55",
+        "cardBg": "#132347"
       }
     }
   ],
@@ -17,144 +20,195 @@
     "parameters": ["payload"],
     "items": [
       {
-        "type": "Container",
+        "type": "Frame",
         "width": "100%",
         "height": "100%",
+        "background": "radial-gradient(circle at 50% 38%, @barcaBlue 0%, @barcaNavy 55%, #060F26 100%)",
+        "onMount": [
+          {
+            "type": "SendEvent",
+            "arguments": ["refresh"],
+            "delay": "${payload.scoreboard.nextPollMs}"
+          }
+        ],
         "items": [
           {
-            "type": "Frame",
+            "type": "Container",
             "width": "100%",
             "height": "100%",
-            "background": "linear-gradient(160deg, @barcaBlue 0%, #061F45 55%, @barcaGarnet 100%)",
+            "paddingLeft": "56dp",
+            "paddingRight": "56dp",
+            "paddingTop": "36dp",
+            "paddingBottom": "36dp",
+            "justifyContent": "spaceBetween",
             "items": [
               {
                 "type": "Container",
-                "width": "100%",
-                "height": "100%",
-                "paddingLeft": "5%",
-                "paddingRight": "5%",
-                "paddingTop": "4%",
-                "paddingBottom": "4%",
+                "direction": "row",
                 "justifyContent": "spaceBetween",
+                "alignItems": "center",
+                "width": "100%",
+                "items": [
+                  {
+                    "type": "Text",
+                    "text": "${payload.scoreboard.competition}",
+                    "fontSize": "20dp",
+                    "fontWeight": "700",
+                    "color": "@textMuted",
+                    "letterSpacing": "3dp"
+                  },
+                  {
+                    "type": "Frame",
+                    "backgroundColor": "${payload.scoreboard.statusColor}",
+                    "borderRadius": "18dp",
+                    "paddingLeft": "16dp",
+                    "paddingRight": "16dp",
+                    "paddingTop": "7dp",
+                    "paddingBottom": "7dp",
+                    "item": {
+                      "type": "Text",
+                      "text": "${payload.scoreboard.statusLabel}",
+                      "fontSize": "18dp",
+                      "fontWeight": "800",
+                      "color": "#FFFFFF",
+                      "letterSpacing": "1dp"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "Container",
+                "direction": "row",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "width": "100%",
+                "grow": 1,
                 "items": [
                   {
                     "type": "Container",
-                    "direction": "row",
-                    "justifyContent": "spaceBetween",
                     "alignItems": "center",
-                    "width": "100%",
+                    "width": "34%",
                     "items": [
                       {
-                        "type": "Text",
-                        "text": "${payload.scoreboard.competition}",
-                        "fontSize": "24dp",
-                        "fontWeight": "600",
-                        "color": "@textMuted",
-                        "letterSpacing": "2dp"
+                        "type": "Frame",
+                        "width": "128dp",
+                        "height": "128dp",
+                        "borderRadius": "64dp",
+                        "backgroundColor": "#FFFFFF",
+                        "item": {
+                          "type": "Image",
+                          "source": "${payload.scoreboard.homeCrest}",
+                          "width": "96dp",
+                          "height": "96dp",
+                          "scale": "best-fit",
+                          "align": "center"
+                        }
                       },
                       {
-                        "type": "Frame",
-                        "backgroundColor": "${payload.scoreboard.statusColor}",
-                        "borderRadius": "20dp",
-                        "paddingLeft": "16dp",
-                        "paddingRight": "16dp",
-                        "paddingTop": "6dp",
-                        "paddingBottom": "6dp",
-                        "item": {
-                          "type": "Text",
-                          "text": "${payload.scoreboard.statusLabel}",
-                          "fontSize": "22dp",
-                          "fontWeight": "700",
-                          "color": "#FFFFFF"
-                        }
+                        "type": "Text",
+                        "text": "${payload.scoreboard.homeName}",
+                        "fontSize": "26dp",
+                        "fontWeight": "700",
+                        "color": "@textPrimary",
+                        "textAlign": "center",
+                        "paddingTop": "16dp",
+                        "maxLines": 1
                       }
                     ]
                   },
                   {
+                    "type": "Frame",
+                    "width": "32%",
+                    "backgroundColor": "@cardBg",
+                    "borderRadius": "24dp",
+                    "paddingTop": "18dp",
+                    "paddingBottom": "18dp",
+                    "item": {
+                      "type": "Container",
+                      "alignItems": "center",
+                      "items": [
+                        {
+                          "type": "Text",
+                          "text": "${payload.scoreboard.homeScore == '' ? 'VS' : (payload.scoreboard.homeScore + ' - ' + payload.scoreboard.awayScore)}",
+                          "fontSize": "72dp",
+                          "fontWeight": "900",
+                          "color": "@barcaGold",
+                          "textAlign": "center"
+                        }
+                      ]
+                    }
+                  },
+                  {
                     "type": "Container",
-                    "direction": "row",
                     "alignItems": "center",
-                    "justifyContent": "spaceAround",
-                    "width": "100%",
+                    "width": "34%",
                     "items": [
                       {
-                        "type": "Container",
-                        "alignItems": "center",
-                        "width": "35%",
-                        "items": [
-                          {
-                            "type": "Image",
-                            "source": "${payload.scoreboard.homeCrest}",
-                            "width": "140dp",
-                            "height": "140dp",
-                            "scale": "best-fit",
-                            "align": "center"
-                          },
-                          {
-                            "type": "Text",
-                            "text": "${payload.scoreboard.homeName}",
-                            "fontSize": "30dp",
-                            "fontWeight": "700",
-                            "color": "@textPrimary",
-                            "textAlign": "center",
-                            "paddingTop": "12dp"
-                          }
-                        ]
+                        "type": "Frame",
+                        "width": "128dp",
+                        "height": "128dp",
+                        "borderRadius": "64dp",
+                        "backgroundColor": "#FFFFFF",
+                        "item": {
+                          "type": "Image",
+                          "source": "${payload.scoreboard.awayCrest}",
+                          "width": "96dp",
+                          "height": "96dp",
+                          "scale": "best-fit",
+                          "align": "center"
+                        }
                       },
                       {
-                        "type": "Container",
-                        "alignItems": "center",
-                        "width": "30%",
-                        "items": [
-                          {
-                            "type": "Text",
-                            "text": "${payload.scoreboard.homeScore} - ${payload.scoreboard.awayScore}",
-                            "fontSize": "96dp",
-                            "fontWeight": "900",
-                            "color": "@barcaGold",
-                            "textAlign": "center"
-                          },
-                          {
-                            "type": "Text",
-                            "text": "${payload.scoreboard.clock}",
-                            "fontSize": "26dp",
-                            "fontWeight": "600",
-                            "color": "@textMuted",
-                            "textAlign": "center",
-                            "paddingTop": "8dp"
-                          }
-                        ]
-                      },
+                        "type": "Text",
+                        "text": "${payload.scoreboard.awayName}",
+                        "fontSize": "26dp",
+                        "fontWeight": "700",
+                        "color": "@textPrimary",
+                        "textAlign": "center",
+                        "paddingTop": "16dp",
+                        "maxLines": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "Container",
+                "alignItems": "center",
+                "width": "100%",
+                "items": [
+                  {
+                    "type": "Container",
+                    "direction": "row",
+                    "justifyContent": "center",
+                    "wrap": "wrap",
+                    "data": "${payload.scoreboard.metaTags}",
+                    "items": [
                       {
-                        "type": "Container",
-                        "alignItems": "center",
-                        "width": "35%",
-                        "items": [
-                          {
-                            "type": "Image",
-                            "source": "${payload.scoreboard.awayCrest}",
-                            "width": "140dp",
-                            "height": "140dp",
-                            "scale": "best-fit",
-                            "align": "center"
-                          },
-                          {
-                            "type": "Text",
-                            "text": "${payload.scoreboard.awayName}",
-                            "fontSize": "30dp",
-                            "fontWeight": "700",
-                            "color": "@textPrimary",
-                            "textAlign": "center",
-                            "paddingTop": "12dp"
-                          }
-                        ]
+                        "type": "Frame",
+                        "backgroundColor": "@chipBg",
+                        "borderRadius": "14dp",
+                        "marginLeft": "6dp",
+                        "marginRight": "6dp",
+                        "marginBottom": "10dp",
+                        "paddingLeft": "14dp",
+                        "paddingRight": "14dp",
+                        "paddingTop": "6dp",
+                        "paddingBottom": "6dp",
+                        "item": {
+                          "type": "Text",
+                          "text": "${data}",
+                          "fontSize": "18dp",
+                          "fontWeight": "600",
+                          "color": "@textMuted"
+                        }
                       }
                     ]
                   },
                   {
                     "type": "Text",
                     "text": "${payload.scoreboard.footer}",
-                    "fontSize": "22dp",
+                    "fontSize": "19dp",
                     "fontWeight": "500",
                     "color": "@textMuted",
                     "textAlign": "center",
