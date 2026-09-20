@@ -1,0 +1,32 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "summary": "Live FC Barcelona scores with an aesthetic scoreboard on your Echo Show",
+          "examplePhrases": [
+            "Alexa open barca live score",
+            "Alexa ask barca live score for the score",
+            "Alexa ask barca live score when barca plays next"
+          ],
+          "name": "Barca Live Score",
+          "description": "Tracks FC Barcelona's matches and shows a live, animated scoreboard on your Echo Show while the match is on. Ask for the live score, or ask when Barca plays next."
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Say 'Alexa, open barca live score' to launch. Say 'what's the score' during or after launch to get the live match state.",
+      "category": "SPORTS",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "interfaces": [
+          {
+            "type": "ALEXA_PRESENTATION_APL"
+          }
+        ]
+      }
+    },
+    "manifestVersion": "1.0"
+  }
+}

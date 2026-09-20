@@ -1,0 +1,57 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "barca live score",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "GetLiveScoreIntent",
+                    "slots": [],
+                    "samples": [
+                        "what's the score",
+                        "what's the barca score",
+                        "how is barca doing",
+                        "give me the live score",
+                        "what's the current score",
+                        "is barca winning",
+                        "show me the score",
+                        "show the live score",
+                        "what's happening in the match",
+                        "how's the match going"
+                    ]
+                },
+                {
+                    "name": "NextMatchIntent",
+                    "slots": [],
+                    "samples": [
+                        "when does barca play next",
+                        "when is barca's next match",
+                        "what's barca's next game",
+                        "when do they play next",
+                        "when is the next match"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}
